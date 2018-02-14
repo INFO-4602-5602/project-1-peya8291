@@ -107,14 +107,14 @@
                            .attr("transform", "translate("+margin.left+","+margin.top+")");
 
 
-                x.domain([d3.min(data, function(d) { return parseFloat(d[xVal]); })-1,
+                x.domain([d3.min(data, function(d) { return parseFloat(d[xVal]); })-4,
                           d3.max(data, function(d) { return parseFloat(d[xVal]); })+1]);
 
-                y.domain([d3.min(data, function(d) { return parseFloat(d[yVal]); })-1,
+                y.domain([d3.min(data, function(d) { return parseFloat(d[yVal]); })-3,
                         d3.max(data, function(d) { return parseFloat(d[yVal]); })+1]);
 
-
-
+                //x.domain(0,d3.max(data, function(d) { return parseFloat(d[xVal]); }));
+                //y.domain(0,d3.max(data, function(d) { return parseFloat(d[yVal]); }));
                        // Add the scatterplot points
                        svg.selectAll("circle")
                           .data(data)
@@ -126,7 +126,6 @@
                           .style('fill','red')
                           .attr('r', 0)
                           .transition()
-                          .ease(d3.easeBounce)
                           .duration(500)
                           .attr('r', 5);
 
@@ -201,10 +200,10 @@
                            .attr("transform", "translate("+margin.left+","+margin.top+")");
 
                      // Scale the range of the data
-                x.domain([d3.min(data, function(d) { return parseFloat(d[xVal]); })-1,
+                x.domain([d3.min(data, function(d) { return parseFloat(d[xVal]); })-4,
                           d3.max(data, function(d) { return parseFloat(d[xVal]); })+1]);
 
-                y.domain([d3.min(data, function(d) { return parseFloat(d[yVal]); })-1,
+                y.domain([d3.min(data, function(d) { return parseFloat(d[yVal]); })-3,
                           d3.max(data, function(d) { return parseFloat(d[yVal]); })+1]);
 
 
@@ -302,10 +301,10 @@ d3.csv("./data/anscombe_II.csv", function (error, data) {
 
            // Scale the range of the data
 
-      x.domain([d3.min(data, function(d) { return parseFloat(d[xVal]); })-1,
+      x.domain([d3.min(data, function(d) { return parseFloat(d[xVal]); })-4,
                 d3.max(data, function(d) { return parseFloat(d[xVal]); })+1]);
 
-      y.domain([d3.min(data, function(d) { return parseFloat(d[yVal]); })-1,
+      y.domain([d3.min(data, function(d) { return parseFloat(d[yVal]); })-3,
               d3.max(data, function(d) { return parseFloat(d[yVal]); })+1]);
 
 
@@ -380,6 +379,36 @@ d3.csv("./data/anscombe_II.csv", function (error, data) {
 
 
         // Put your part five code here ***********************
+        function linearRegression(y,x,data){
+
+        var lr = {};
+        var n = y.length;
+        var r=0;
+            var rpart;
+
+        var xmean = d3.mean(data, function(d) { return d.x; });
+        var ymean = d3.mean(data, function(d) { return d.y; });
+        var xstd = d3.deviation(data, function(d) { return d.x; });
+        var ystd = d3.deviation(data, function(d) { return d.y; });
+
+
+
+        for (var i = 0; i < y.length; i++) {
+
+             rpart=(x[i]-xmean)*(y[i]-ymean)/xstd/ystd;
+            var r=r+rpart;
+        }
+           var r1=r/(y.length-1)
+
+        lr['slope'] = r1*(ystd/xstd);
+        lr['intercept'] = ymean-lr.slope*xmean;
+        
+
+        return lr;
+
+        };
+
+
         d3.csv("./data/anscombe_I.csv", function (error, data) {
                if (error) throw error;
 
@@ -421,10 +450,10 @@ d3.csv("./data/anscombe_II.csv", function (error, data) {
 
                    // Scale the range of the data
 
-              x.domain([d3.min(data, function(d) { return parseFloat(d[xVal]); })-1,
+              x.domain([d3.min(data, function(d) { return parseFloat(d[xVal]); })-4,
                         d3.max(data, function(d) { return parseFloat(d[xVal]); })+1]);
 
-              y.domain([d3.min(data, function(d) { return parseFloat(d[yVal]); })-1,
+              y.domain([d3.min(data, function(d) { return parseFloat(d[yVal]); })-4,
                       d3.max(data, function(d) { return parseFloat(d[yVal]); })+1]);
 
                      // Add the scatterplot points
@@ -438,7 +467,6 @@ d3.csv("./data/anscombe_II.csv", function (error, data) {
                         .style('fill','red')
                         .attr('r', 0)
                         .transition()
-                        .ease(d3.easeBounce)
                         .duration(500)
                         .attr('r', 5);
 
@@ -464,6 +492,19 @@ d3.csv("./data/anscombe_II.csv", function (error, data) {
                                          .text(yVal)
                                          .attr("transform","rotate(90)")
                                          .attr("text-anchor", "start");
+
+
+                                var y1 = data.map(function (d) { return parseFloat(d[xVal]); });
+                                var x1 = data.map(function (d) { return parseFloat(d[yVal]); });
+                                var lr = linearRegression(y1,x1,data);
+                                         console.log(lr);
+                                 var max = d3.max(data, function(d) { return parseFloat(d[xVal]); })
+                                 var myLine = svg.append("svg:line")
+                                                 .attr("x1", x(0))
+                                                 .attr("y1", y(lr.intercept))
+                                                 .attr("x2", x(max))
+                                                 .attr("y2", y( (max * lr.slope) + lr.intercept ))
+                                                 .style("stroke", "black");
 
                });
 
@@ -511,10 +552,10 @@ d3.csv("./data/anscombe_II.csv", function (error, data) {
 
                           // Scale the range of the data
 
-                     x.domain([d3.min(data, function(d) { return parseFloat(d[xVal]); })-1,
+                     x.domain([d3.min(data, function(d) { return parseFloat(d[xVal]); })-4,
                                d3.max(data, function(d) { return parseFloat(d[xVal]); })+1]);
 
-                     y.domain([d3.min(data, function(d) { return parseFloat(d[yVal]); })-1,
+                     y.domain([d3.min(data, function(d) { return parseFloat(d[yVal]); })-3,
                              d3.max(data, function(d) { return parseFloat(d[yVal]); })+1]);
 
                             // Add the scatterplot points
@@ -554,6 +595,19 @@ d3.csv("./data/anscombe_II.csv", function (error, data) {
                                                 .text(yVal)
                                                 .attr("transform","rotate(90)")
                                                 .attr("text-anchor", "start");
+
+
+                                var y1 = data.map(function (d) { return parseFloat(d[xVal]); });
+                                var x1 = data.map(function (d) { return parseFloat(d[yVal]); });
+                                var lr = linearRegression(y1,x1,data);
+                                        console.log(lr);
+                                var max = d3.max(data, function(d) { return parseFloat(d[xVal]); })
+                                var myLine = svg.append("svg:line")
+                                                .attr("x1", x(0))
+                                                .attr("y1", y(lr.intercept))
+                                                .attr("x2", x(max))
+                                                .attr("y2", y( (max * lr.slope) + lr.intercept ))
+                                                .style("stroke", "black");
 
                       });
 
@@ -600,10 +654,10 @@ d3.csv("./data/anscombe_II.csv", function (error, data) {
 
                                  // Scale the range of the data
 
-                            x.domain([d3.min(data, function(d) { return parseFloat(d[xVal]); })-1,
+                            x.domain([d3.min(data, function(d) { return parseFloat(d[xVal]); })-4,
                                       d3.max(data, function(d) { return parseFloat(d[xVal]); })+1]);
 
-                            y.domain([d3.min(data, function(d) { return parseFloat(d[yVal]); })-1,
+                            y.domain([d3.min(data, function(d) { return parseFloat(d[yVal]); })-5,
                                     d3.max(data, function(d) { return parseFloat(d[yVal]); })+1]);
 
                                    // Add the scatterplot points
@@ -642,6 +696,20 @@ d3.csv("./data/anscombe_II.csv", function (error, data) {
                                                        .text(yVal)
                                                        .attr("transform","rotate(90)")
                                                        .attr("text-anchor", "start");
+
+
+
+                                        var y1 = data.map(function (d) { return parseFloat(d[xVal]); });
+                                        var x1 = data.map(function (d) { return parseFloat(d[yVal]); });
+                                        var lr = linearRegression(y1,x1,data);
+                                               console.log(lr);
+                                        var max = d3.max(data, function(d) { return parseFloat(d[xVal]); })
+                                        var myLine = svg.append("svg:line")
+                                                        .attr("x1", x(0))
+                                                        .attr("y1", y(lr.intercept))
+                                                        .attr("x2", x(max))
+                                                        .attr("y2", y( (max * lr.slope) + lr.intercept ))
+                                                        .style("stroke", "black");
 
                         });
 
@@ -689,10 +757,10 @@ d3.csv("./data/anscombe_II.csv", function (error, data) {
 
                                    // Scale the range of the data
 
-                              x.domain([d3.min(data, function(d) { return parseFloat(d[xVal]); })-1,
+                              x.domain([d3.min(data, function(d) { return parseFloat(d[xVal]); })-8,
                                         d3.max(data, function(d) { return parseFloat(d[xVal]); })+1]);
 
-                              y.domain([d3.min(data, function(d) { return parseFloat(d[yVal]); })-1,
+                              y.domain([d3.min(data, function(d) { return parseFloat(d[yVal]); })-5,
                                       d3.max(data, function(d) { return parseFloat(d[yVal]); })+1]);
 
                                      // Add the scatterplot points
@@ -731,6 +799,18 @@ d3.csv("./data/anscombe_II.csv", function (error, data) {
                                                          .text(yVal)
                                                          .attr("transform","rotate(90)")
                                                          .attr("text-anchor", "start");
+
+                                        var y1 = data.map(function (d) { return parseFloat(d[xVal]); });
+                                        var x1 = data.map(function (d) { return parseFloat(d[yVal]); });
+                                        var lr = linearRegression(y1,x1,data);
+                                        console.log(lr);
+                                        var max = d3.max(data, function(d) { return parseFloat(d[xVal]); })
+                                        var myLine = svg.append("svg:line")
+                                                        .attr("x1", x(0))
+                                                        .attr("y1", y(lr.intercept))
+                                                        .attr("x2", x(max))
+                                                        .attr("y2", y( (max * lr.slope) + lr.intercept ))
+                                                        .style("stroke", "black");
 
                           });
 
