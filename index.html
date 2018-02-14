@@ -34,6 +34,7 @@
 	</div>
 
     <script type="text/javascript">
+
         // Put your part one code here ***********************
         // Leave this to test your data uploading. All data uploading should be above this line
         d3.csv("./data/anscombe_I.csv", function(data) {
@@ -72,8 +73,7 @@
 
           // Get the data
           d3.csv("./data/anscombe_II.csv", function (error, data) {
-              //console.log(d3.min(data, function(d) { return d.value; }));
-              //console.log(d3.max(data, function(d) { return d.value; }));
+
                  if (error) throw error;
 
                  // First, we will create some constants to define non-data-related parts of the visualization
@@ -165,9 +165,6 @@
 
               if (error) throw error;
 
-              data.forEach(function(d){ d[xVal] = parseFloat(d[xVal]); });
-              data.forEach(function(d){ d[yVal] = parseFloat(d[yVal]); });
-
                  // First, we will create some constants to define non-data-related parts of the visualization
                  var w = 700; // Width of our visualization
                  var h = 500; // Height of our visualization
@@ -222,8 +219,6 @@
                       .attr("stroke-linejoin", "round")
                       .attr("stroke-linecap", "round")
                       .attr("stroke-width", 1.5)
-                      //.attr("d", line);
-                      //.attr("class", "line")
                       .attr("d", valueline(data));
 
 
@@ -742,12 +737,12 @@ d3.csv("./data/anscombe_II.csv", function (error, data) {
 
 //Bell: Xs and Ys bar chart
 //Bar chart for Xs
-d3.csv("./data/anscombe_I.csv", function (error, data) {
+d3.csv("./data/anscombe_II.csv", function (error, data) {
        if (error) throw error;
 
 var w = 700; // Width of our visualization
 var h = 500; // Height of our visualization
-var xOffset = 40; // Space for x-axis labels
+var xOffset = 50; // Space for x-axis labels
 var yOffset = 100; // Space for y-axis labels
 var margin = 10; // Margin around visualization
 var vals = ['x','y']; // List of data attributes
@@ -764,7 +759,10 @@ var height = 500 - margin.top -margin.bottom;
 var x = d3.scaleLinear().range([0, width]);
 var y = d3.scaleLinear().range([height,0]);
 
-
+data.forEach(function(d,idx){
+               d.x = +d.x;
+               d.idx = idx+1;
+           });
 // append the svg obgect to the body of the page
 // appends a 'group' element to 'svg'
 // moves the 'group' element to the top left margin
@@ -775,39 +773,36 @@ var svg = d3.select("body").append("svg")
           .attr("transform", "translate("+margin.left+","+margin.top+")");
 
 
-x.domain([d3.min(data, function(d) { return parseFloat(d[xVal]); })-1,
-         d3.max(data, function(d) { return parseFloat(d[xVal]); })+1]);
+      x.domain([0,data.length+1]);
+      y.domain([0, d3.max(data, function(d) {return parseFloat(d[xVal]);})]);
 
-y.domain([d3.min(data, function(d) { return parseFloat(d[yVal]); })-1,
-       d3.max(data, function(d) { return parseFloat(d[yVal]); })+6]);
-
-data.sort(function(a,b) {return(b.x - a.x);});
+      data.sort(function(a,b) {return(b.x - a.x);});
       // Add the bar
       svg.selectAll('.bar')
          .data(data)
          .enter()
          .append('rect')
-         .attr("x", function(d) { return x(d[xVal]); })
-         .attr("y", function(d) { return y(d[xVal]); })  //changed this to get x values with x value on y axis.
          .attr("width", 20)
-         .attr("height", function(d) { return h - y(d.x) - xOffset;})
          .style('fill', 'red')
+         .attr('x', function(d){ return x(d.idx) })
+         .attr("y", function(d) { return y(d[xVal]); })
+         .attr("height", function(d) { return h - y(d.x) - xOffset;})
 
 
-//try highlight bar
-      /*   d3.selectAll('.bar').on('mouseover',function(){  // changes color when hovering
-              var bar = d3.select(this);
-              bar.style('fill','brown')
-                 .transition()
+//try highlight bar hovering
+    .on('mouseover',function(){  // changes color when hovering
+     var barc = d3.select(this);
+     barc.style('fill','green')
+        .transition()
+})
+        .on('mouseout',function(){  // color changes back if mouse is out
+          var barc = d3.select(this);
+          barc.transition()
+        .duration(500)
+        .style("fill","red");
 
-          })
 
-          .on('mouseout',function(){  // color changes back if mouse is out
-              var bar = d3.select(this);
-              bar.transition()
-                  .duration(500)
-                  .style("fill","red")
-          })*/
+})
 
           // Add the X Axis
           svg.append("g")
@@ -832,6 +827,7 @@ data.sort(function(a,b) {return(b.x - a.x);});
                           .attr("text-anchor", "start");
 
 });
+
 
 // bar chart for Ys
 d3.csv("./data/anscombe_II.csv", function (error, data) {
@@ -840,7 +836,7 @@ d3.csv("./data/anscombe_II.csv", function (error, data) {
 
 var w = 700; // Width of our visualization
 var h = 500; // Height of our visualization
-var xOffset = 40; // Space for x-axis labels
+var xOffset = 50; // Space for x-axis labels
 var yOffset = 100; // Space for y-axis labels
 var margin = 10; // Margin around visualization
 var vals = ['x','y']; // List of data attributes
@@ -857,7 +853,10 @@ var height = 500 - margin.top -margin.bottom;
 var x = d3.scaleLinear().range([0, width]);
 var y = d3.scaleLinear().range([height,0]);
 
-
+data.forEach(function(d,idx){
+               d.x = +d.x;
+               d.idx = idx+1;
+           });
 // append the svg obgect to the body of the page
 // appends a 'group' element to 'svg'
 // moves the 'group' element to the top left margin
@@ -867,25 +866,21 @@ var svg = d3.select("body").append("svg")
           .append("g")
           .attr("transform", "translate("+margin.left+","+margin.top+")");
 
+          x.domain([0,data.length+1]);
+          y.domain([0, d3.max(data, function(d) {return parseFloat(d[yVal]);})]);
 
-          x.domain([d3.min(data, function(d) { return parseFloat(d[xVal]); })-1,
-                   d3.max(data, function(d) { return parseFloat(d[xVal]); })+1]);
-
-          y.domain([d3.min(data, function(d) { return parseFloat(d[yVal]); })-1,
-                 d3.max(data, function(d) { return parseFloat(d[yVal]); })+6]);
-
-data.sort(function(a,b) {return(b.y - a.y);});
+         data.sort(function(a,b) {return(b.y - a.y);});
 
       // Add the bar
       svg.selectAll('.bar')
          .data(data)
          .enter()
          .append('rect')
-         .attr("x", function(d) { return x(d[xVal]); })
-         .attr("y", function(d) { return y(d[yVal]); })  //changed this to get x values with x value on y axis.
+         .attr('x', function(d){ return x(d.idx) })
+         .attr("y", function(d) { return y(d[yVal]);})
          .attr("width", 20)
          .attr("height", function(d) { return h - y(d.y) - xOffset;})
-         .style('fill', 'green')
+         .style('fill', 'red')
 
 
           // Add the X Axis
@@ -911,9 +906,6 @@ data.sort(function(a,b) {return(b.y - a.y);});
                           .attr("text-anchor", "start");
 
 });
-
-
-
 
 
     </script>
