@@ -47,11 +47,11 @@ Sources:
 
 I use some source for index.html. I listed them below:
 
-#1 https://bl.ocks.org/d3noob/bdf28027e0ce70bd132edc64f1dd7ea4
+ 1 https://bl.ocks.org/d3noob/bdf28027e0ce70bd132edc64f1dd7ea4
 
- #1 http://staclibrarykoverflow.com/questions/11300059/appending-d3-js-canvas-to-div
+ 2 http://staclibrarykoverflow.com/questions/11300059/appending-d3-js-canvas-to-div
 
- #2 http://stackoverflow.com/questions/38450349/uncaught-typeerror-cannot-read-property-linear-of-undefined
+ 3 http://stackoverflow.com/questions/38450349/uncaught-typeerror-cannot-read-property-linear-of-undefined
 
- #3 https://bl.ocks.org/d3noob/6f082f0e3b820b6bf68b78f2f7786084
+ 4 https://bl.ocks.org/d3noob/6f082f0e3b820b6bf68b78f2f7786084
 
