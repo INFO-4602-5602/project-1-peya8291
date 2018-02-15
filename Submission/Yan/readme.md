@@ -49,7 +49,7 @@ I use some source for index.html. I listed them below:
 
  1 https://bl.ocks.org/d3noob/bdf28027e0ce70bd132edc64f1dd7ea4
 
- 2 http://staclibrarykoverflow.com/questions/11300059/appending-d3-js-canvas-to-div
+ 2 http://bl.ocks.org/mattykuch/40ba19de703632ea2afbbc5156b9471f
 
  3 http://stackoverflow.com/questions/38450349/uncaught-typeerror-cannot-read-property-linear-of-undefined
 
