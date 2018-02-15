@@ -22,7 +22,7 @@ Bell: Xs and Ys  (Done)
 
 Bell: Styling your Visualization (Done)
 
-I download an old floral paper background and use URL creating background.  In the projector1.css file, I was styling the body part and use different font. I also put a background color (light blue) as back up. I choose this background, because users can clearly see the visualization. User could focus on visualization, not the background.
+I download an old grunge parchment background and use URL creating background.  In the projector1.css file, I was styling the body part and use different font. I also put a background color (light blue) as back up. I choose this background, because users can clearly see the visualization. User could focus on visualization, not the background.
 body {
     font-family: sans-serif;
     font-size: 11px;
